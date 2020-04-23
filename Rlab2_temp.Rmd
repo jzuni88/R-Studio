@@ -1,0 +1,210 @@
+---
+title: "R lab 2 for BIOS 20151"
+author: "Juan Zuniga"
+output:
+    html_document: default
+---
+
+Before starting work:
+* Read sections 3.3 and 8.3 of the textbook
+* Go through the R week 2 tutorial
+
+
+## Part 1: Reading in data and fitting functions by eye
+
+In this section you will read in three different data files and assign each data frame a descriptive name, e.g. Alcohol, and then plot and fit relationship between the variables within each data frame. Your task will be to choose the parameters slope and intercept that produce a plot that does a decent job of resembling the data, meaning that the line should pass through the scatterplot and capture its trend (rising or falling) fairly well.
+
+
+1. Read in the mutations data set found in the file `kong_mutation_data.txt`, using the option `header=TRUE`. It contains three variables: `PatAge` (paternal age in years), `MatAge` (maternal age in years), and `Mutations` (number of de novo mutations). 
+
+a) Print the mean and standard deviation of each variable, and generate histograms of all three variables.
+
+```{r}
+library(HistData)
+summary(kong_mutation_data)
+KMD<- read.table(file = "kong_mutation_data.txt", header = TRUE)
+
+mPatAge <-mean(KMD$PatAge)
+sdPatAge <- sd(KMD$PatAge)
+ 
+mMatAge <-mean(KMD$MatAge)
+sdMatAge<-sd(KMD$MatAge)
+
+mMutations <-mean(KMD$Mutations)
+sdMutations <- sd(KMD$Mutations)
+
+
+paste("The mean paternal age is:", mPatAge)
+paste("The paternal age sd is:", sdPatAge)
+paste("The mean maternal age is:",mMatAge)
+paste("The maternal age sd is:", sdMatAge)
+paste("The mean mutation number is:",mMutations)
+paste("The mutation number sd:",sdMutations)
+
+
+
+hist(KMD$PatAge, main = "Histogram of Paternal Parent Age" , xlab = "Pateral Parent Age")
+hist(KMD$MatAge, main = "Histogram of Maternal Parent Age" , xlab = "Materal Parent Age")
+hist(KMD$Mutations, main = "Histogram of Mutations" , xlab = "Number of Mutations")
+```
+
+
+b) Plot `Mutations` as a function `PatAge` using circles (the default type). Assign values to slope and intercept variables, calculate a vector of predicted values for `Mutation`, and use `lines()` to add a plot of the predicted values to the data plot. Try different values of the slope and intercept until you find ones that fit the data reasonably well. Calculate the sum (use the `sum()` function) of squared differences between the vector `Mutation` and the vector of predicted values and print it out.
+
+  
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE
+
+library(ggplot2)
+plot(KMD$PatAge, KMD$Mutations, main = 'Mutations as function of paternal age', xlab= 'Paternal Age', ylab = "Number of Mutations")
+abline(1, 2, col="blue") # Predicition with assignmed slope and intercept variables. 
+myfit <- lm(Mutations ~ PatAge, KMD) 
+abline(myfit)
+effect_plot(myfit, pred = KMD$Mutations)
+
+'These were simply used to compare our prediction value to the actually linear regression model.
+summary(myfit)
+print(paste("The best-fit slope is: ", myfit$coefficients[2]))
+print(paste("The best-fit intercept is: ", myfit$coefficients[1]))
+print(vec_Mutations)
+'
+
+```
+
+
+c) Make a plot of `Mutations` vs `MatAge` using circles (the default type). Assign values to slope and intercept variables, calculate a vector of predicted values for `Mutation`, and use `lines()` to add a plot of the predicted values to the data plot. Try different values of the slope and intercept until you find ones that fit the data reasonably well. Calculate the sum (use the `sum()` function) of squared differences between the vector `Mutation` and the vector of predicted values and print it out.
+  
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+plot(KMD$MatAge, KMD$Mutations, main = 'Mutations as function of maternal age', xlab= 'Maternal Age', ylab = "Number of Mutations")
+lines(x = KMD$MatAge,y = KMD$Mutations,col="blue"")
+
+```
+
+
+2. Read in the data set of heart rates before and after exercis found in the file `HR_class.txt` with the option `header=TRUE`. It contains variables `Rest1` (heart rate at rest in bpm), `Rest2` (heart rate at rest in bpm), `Ex1` (heart rate after exercise in bpm), `Ex2` (heart rate after exercise in bpm).
+
+a) Print the mean and standard deviation of each variable, and generate histograms of all four variables.
+
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+```
+
+b) Plot `Ex1` as a function of `Rest1` using circles (the default type). Assign values to slope and intercept variables, calculate a vector of predicted values for `Ex1`, and use `lines()` to add a plot of the predicted values to the data plot. Try different values of the slope and intercept until you find ones that fit the data reasonably well. Calculate the sum (use the `sum()` function) of squared differences between the vector `Ex1` and the vector of predicted values and print it out.
+
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+```
+
+
+c) Plot `Rest2` as a function of `Rest1` using circles (the default type). Assign values to slope and intercept variables, calculate a vector of predicted values for `Rest2`, and use `lines()` to add a plot of the predicted values to the data plot. Try different values of the slope and intercept until you find ones that fit the data reasonably well. Calculate the sum (use the `sum()` function) of squared differences between the vector `Rest2` and the vector of predicted values and print it out.
+
+
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+```
+
+
+3. Read in the data for the concentration of alcohol in blood plasma after administration of alcohol in the file `Alcohol_data.txt` with the option `header=TRUE`. It contains variables `Conc` (blood alcohol concentration in micrograms/mL) and the variable `Time` (in hours after consumption).
+
+
+a)  Plot `Conc` as a function of `Time` using circles (the default type). Assign values to slope and intercept variables, calculate a vector of predicted values for `Conc`, and use `lines()` to add a plot of the predicted values to the data plot. Try different values of the slope and intercept until you find ones that fit the data reasonably well. Calculate the sum (use the `sum()` function) of squared differences between the vector `Conc` and the vector of predicted values and print it out.
+
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+```
+
+
+
+b) The variable `Conc` rises and falls, so it would be better to fit it using two separate linear functions. Assign two different variables for slopes and two different for intercepts of two linear functions, and calculate two vectors of predicted values, by splitting up the vector `Time` into the rising and falling subsets. Reminder: use a range of indices (e.g. 1:5) to create a subset of consecutive elements of a vector. Overlay a plot of two linear functions over the data plot, one to match the rise and the second the decay (they should intercept roughly at the peak of the concentration.) Calculate the sums of squared differences between the two subsets of vector `Conc` and the two vectors of predicted values and print the sum of the two sums.
+ 
+```{r}
+# THIS IS A COMMENT. YOUR CODE GOES HERE 
+```
+
+YOUR ANSWERS GO HERE
+
+
+
+## Part 2: Linear regression
+ 
+In the following questions, you will do the following:
+1) calculate the linear regression on the indicated variables in the data set
+2) plot the scatterplot and overlay the linear regression line
+3) plot the residuals as a function of the explanatory variable
+4) answer questions about interpretation of linear regression
+ 
+1. a) Use the data from the file `kong_mutation_data.txt` and perform the tasks stated above for Mutations as a function of PatAge (remember to label your plots and axes!) 
+
+```{r}
+# YOUR CODE HERE
+```
+
+How does the slope compare to the fit your performed by eye in question 1.1a? What does the slope of that line mean? What fraction of the variance is explained by the linear relationship? Does the plot of residuals show any significant deviations from the assumptions?
+
+
+YOUR ANSWERS GO HERE 
+ 
+b) Perform the same tasks as above for `Mutations` as a function of `MatAge` (remember to label your plots and axes!)
+
+
+```{r}
+# YOUR CODE HERE
+```
+ 
+ 
+How does the slope compare to the fit your performed by eye in question 1.1c? What does the slope of that line tell you? What fraction of the variance is explained by the linear relationship? Is the number of de novo mutations explained better by maternal age or paternal age? Does the plot of residuals show any significant deviations from the assumptions?
+  
+YOUR ANSWERS GO HERE 
+
+
+2. a) Use the data from the file `HR_class.txt`and perform the tasks stated above for variables `Ex1` as a function of `Rest1` (remember to label your plots and axes!)
+
+```{r}
+# YOUR CODE HERE
+```
+
+How does the slope compare to the fit your performed by eye in question 1.2b? What does the slope of that line tell you? What fraction of the variance is explained by the linear relationship? Does the plot of residuals show any significant deviations from the assumptions?
+
+YOUR ANSWERS GO HERE 
+
+
+b) Perform the tasks stated above for variables `Rest2` as a function of `Rest1` (remember to label your plots and axes!)
+
+```{r}
+# YOUR CODE HERE
+```
+
+How does the slope compare to the fit your performed by eye in question 1.2c? What does the slope of that line tell you? What fraction of the variance is explained by the linear relationship? Does the plot of residuals show any significant deviations from the assumptions?
+
+YOUR ANSWERS GO HERE 
+
+
+  
+3. a) Use the data from the file `Alcohol_data.txt` and perform the tasks stated above for variables `Conc` as a function of `Time` (remember to label your plots and axes!)
+
+```{r}
+# YOUR CODE HERE
+```
+
+How does the slope compare to the fit your performed by eye in question 1.3a? What does the slope of that line tell you? What fraction of the variance is explained by the linear relationship? Does the plot of residuals show any significant deviations from the assumptions?
+
+
+YOUR ANSWERS GO HERE 
+
+
+b) As you did in question 1.3b, divide the variables `Time` and `Conc` into two subsets, first for the rising portion and second for the falling portion. Make a new plot of the data, compute two linear regressions for the two subsets of the variables (`Conc` and `Time`) and plot the two best-fit lines on the same plot. You don't need to plot the residuals, but it's a fun challenge if you want to do it!
+
+```{r}
+# YOUR CODE HERE
+```
+  
+
+How do the two slopes compare to the fit your performed by eye in Part 1.3b? What do the slopes of the lines mean? What fraction of the variance is explained by the two linear relationships? 
+
+
+YOUR ANSWERS GO HERE 
+
+
+
+
